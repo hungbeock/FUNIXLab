@@ -1,0 +1,21 @@
+{
+  "name": "lab",
+  "version": "1.0.0",
+  "description": "co chut thay doi",
+  "main": "index.html",
+  "scripts": {
+    "start": "npm run lite",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lite":"lite-sever"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hungbeock/FUNIXLab.git"
+  },
+  "author": "hungbeock",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hungbeock/FUNIXLab/issues"
+  },
+  "homepage": "https://github.com/hungbeock/FUNIXLab#readme"
+}
