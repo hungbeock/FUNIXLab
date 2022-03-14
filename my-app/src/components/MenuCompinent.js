@@ -17,18 +17,7 @@ class Menu extends Component {
             console.log('nhân vien', staff);
             let startDate = new Date(staff.startDate);
             return (
-                // <Card>
-                // <Card className="col-12 col-md-5 m-1" >
-                //     <CardImg width="100%" object src={staff.image} alt={staff.name} />
-                //     <CardBody >
-                //     <CardTitle>{staff.name}</CardTitle>
-                //     <CardText>{staff.description}</CardText>
-                //         </CardBody>  
-                // </Card>
-                // <Card  className="col-12 col-md-5 m-1" >
-                //     <CardTitle>{staff.name}</CardTitle>
-                // </Card>
-                // </Card>
+               
 
                 <div className="col-12 col-md-5 m-1" >
                     <h3> Họ và tên : {staff.name}</h3>
@@ -52,18 +41,7 @@ class Menu extends Component {
                 <div style={{ "color": "gray", "fontSize": "20px" }} onClick={() => this.onDishSelect(staff)} className="col-12 col-md-5 m-1"  >
                     <p style={{ textAlign: 'left' }}> {staff.name}</p>
                 </div>
-                // <div key={staff.id} className="col-12 col-md-5 m-1">
-                //     <Card onClick={() => this.onDishSelect(staff)}  >
-
-                //             <CardImg width="100%" object src={staff.image} alt={staff.name} />
-
-
-                //         <CardImgOverlay>
-                //                 <CardTitle>{staff.name}</CardTitle>
-
-                //             </CardImgOverlay>
-                //     </Card>
-                // </div>
+               
             )
         })
 
