@@ -34,5 +34,5 @@ class Main extends Component {
   );
 }
 }
-console.log(Main)
+
 export default Main;
