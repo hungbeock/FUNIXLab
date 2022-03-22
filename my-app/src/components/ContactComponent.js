@@ -1,7 +1,10 @@
-import React ,{Component} from 'react';
-import {Breadcrumb , BreadcrumbItem ,Input,Form,FormGroup,Label,Col ,Button ,Row ,FormFeedback} from 'reactstrap'
+import React, { Component } from 'react';
+import {
+    Breadcrumb, BreadcrumbItem,
+    Button, Col, Label, Row
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import {Control ,LocalForm ,Errors} from 'react-redux-form';
+import { Control, LocalForm, Errors, actions } from 'react-redux-form';
 
 class Contact extends Component  {
     constructor(props) {
@@ -66,6 +69,7 @@ class Contact extends Component  {
                         <h3>Send us Your Feedback</h3>
                     </div>
                     <div className="col-12 col-md-9">
+                   
                     <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                             <Row className="form-group">
                                 <Label htmlFor="firstname" md={2}>First Name</Label>
