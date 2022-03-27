@@ -82,7 +82,8 @@ handleSubmit=(event) => {
       annualLeave: this.state.annualLeave,
       overTime: this.state.overTime,
       image: this.state.image
-  };
+  }
+  console.log('fsf',newStaff)
   this.props.addStaff(newStaff);
   
 }

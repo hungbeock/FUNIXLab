@@ -46,9 +46,9 @@ function RenderStaff(staff) {
                     </div>
                     <div className="col-9">
                         <CardTitle >Họ và tên: {staff.staff.name}</CardTitle>
-                        <CardText >Ngày sinh: {dateFormat( staff.doB ,"dd/MM/yyyy")}</CardText>
-                        <CardText >Ngày vào công ty: {dateFormat( staff.startDate,"dd/MM/yyyy")}</CardText> 
-                        <CardText >Phòng ban: {staff.staff.department.name}</CardText>
+                        <CardText >Ngày sinh: {dateFormat( staff.staff.doB ,"dd/MM/yyyy")}</CardText>
+                        <CardText >Ngày vào công ty: {dateFormat( staff.staff.startDate,"dd/MM/yyyy")}</CardText> 
+                        <CardText >Phòng ban: {staff.staff.department}</CardText>
                         <CardText >Số ngày nghỉ còn lại: {staff.staff.annualLeave}</CardText>
                         <CardText >Số ngày đã làm thêm: {staff.staff.overTime}</CardText>
                        
