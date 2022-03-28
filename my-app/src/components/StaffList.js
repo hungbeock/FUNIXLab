@@ -1,45 +1,30 @@
-import React, { Component } from "react";
-import {
-  Card,
-  CardImg,
-  CardBody,
-  CardSubtitle,
-  Button,
-  Modal,
-  Col,
-  Input,
-  ModalHeader,
-  ModalBody,
-  Row,
-  Label,
-  FormFeedback
-} from "reactstrap";
+import React, { Component } from 'react'; 
+import { Button, Card, CardImg, CardTitle, Input 
+  ,Modal ,ModalHeader,ModalBody , Form, FormGroup, Row,Label, Col, FormFeedback} from "reactstrap";
 import { Link } from "react-router-dom";
-import {Control ,LocalForm ,Errors} from 'react-redux-form';
+import { Control, LocalForm, Errors } from "react-redux-form";
+
+//Function hiển thị ra danh sách nhân viên
+function RenderStaffList({ nv, onClick }) {
+    // console.log("sao the no")
+    return (
+      <Card>
+        <Link to={`/nhanvien/${nv.id}`}>
+          <CardImg width="100%" src={nv.image} alt={nv.name} />
+          <div>
+            <CardTitle>{nv.name}</CardTitle>
+          </div>
+        </Link>
+      </Card>
+    );
+}
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 const isNumber = (val) => !isNaN(Number(val));
 
-// Presentational component (const) dùng để Render danh sách từng nhân viên
-function RenderStaffList({ nv, onClick }) {
-  // console.log("sao the no")
-  return (
-    <Card>
-      <Link to={`/nhanvien/${nv.id}`}>
-        <CardImg width="100%" src={nv.image} alt={nv.name} />
-        <div>
-          <CardTitle>{nv.name}</CardTitle>
-        </div>
-      </Link>
-    </Card>
-  );
-}
-
-// Presentational component (const)
-
-class StaffList extends Component {
+class StaffList extends Component{
   constructor(props) {
     super(props);
     this.state = {
@@ -60,7 +45,7 @@ class StaffList extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  handleBlur = (field) => (evt) => {
+  handleBlur = (field) => (event) => {
     this.setState({
       touched: { ...this.state.touched, [field]: true }
     });
@@ -90,55 +75,56 @@ class StaffList extends Component {
       this.setState({
         touched: { doB: true, startDate: true }
       });
-    else this.props.onAdd(newStaff);
+    else this.props.addStaff(newStaff);
   };
 
-  validate(doB, startDate) {
-    const errors = {
-      doB: "",
-      startDate: ""
-    };
+validate(doB, startDate) {
+  const errors = {
+    doB: "",
+    startDate: ""
+  };
 
-    if (this.state.touched.doB && doB.length < 1) errors.doB = "Yêu cầu nhập";
-    if (this.state.touched.startDate && startDate.length < 1)
-      errors.startDate = "Yêu cầu nhập";
+  if (this.state.touched.doB && doB.length < 1) errors.doB = "Yêu cầu nhập";
+  if (this.state.touched.startDate && startDate.length < 1)
+    errors.startDate = "Yêu cầu nhập";
 
-    return errors;
-  }
+  return errors;
+}
 
-  toggleModal() {
-    this.setState({
-      modalOpen: !this.state.modalOpen
-    });
-  }
-
-  /* Hàm tìm kiếm từ khóa tên nhân viên và render ra kết quả tìm kiếm nhân viên  */
-  timNhanvien(event) {
-    const nameS = event.target.nameS.value;
+toggleModal(){
+  this.setState({
+    modalOpen :!this.state.modalOpen
+  })
+}
+ /* Hàm tìm kiếm từ khóa tên nhân viên và render ra kết quả tìm kiếm nhân viên  */
+timNhanvien(event){
     event.preventDefault();
-    this.setState({ nameF: nameS });
-  }
+    const nameS=event.target.nameS.value;
+    this.setState({nameF:nameS} );
+    }
 
-  render() {
-    const errors = this.validate(this.state.doB, this.state.startDate);
-
-    const staffList= this.props.staffs.filter((nv)=>{
-      if(this.state.nameF ===""){
-        return nv;
-       }else if ( 
-        nv.name.toLowerCase().includes(this.state.nameF.toLowerCase())
-       ){
-       return nv;
-        }
-       }).map((nv)=>{  
-         return (          
-             <div className="col-lg-2 col-md-4 col-6" key={nv.id}>
-                 <RenderStaffList nv={nv}  />
-             </div>         
-         )
-       })
-    //Render giao diện Staff list
-    return (
+render() {
+  const errors = this.validate(
+      this.state.doB,
+      this.state.startDate
+      );
+  
+   const staffList= this.props.staffs.filter((nv)=>{
+    if(this.state.nameF ===""){
+      return nv;
+     }else if ( 
+      nv.name.toLowerCase().includes(this.state.nameF.toLowerCase())
+     ){
+     return nv;
+      }
+     }).map((nv)=>{  
+       return (          
+           <div className="col-lg-2 col-md-4 col-6" key={nv.id}>
+               <RenderStaffList nv={nv}  />
+           </div>         
+       )
+     })
+     return (
       <div className="container">
         <div className="row">
           <div className="col-12 col-md-6 mt-3">
@@ -174,10 +160,11 @@ class StaffList extends Component {
         <div className="col-12">
           <hr />
         </div>
+
         <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Thêm nhân viên</ModalHeader>
           <ModalBody>
-            <LocalForm onSubmit={(value) => this.handleSubmit(value)}>
+            <LocalForm onSubmit={this.handleSubmit}>
               <Row className="control-group">
                 <Label htmlFor="name" md={4}>
                   Tên
@@ -346,7 +333,7 @@ class StaffList extends Component {
               </Row>
               <Row className="control-group">
                 <Col md={{ size: 10, offset: 2 }}>
-                  <Button type="submit" color="success">
+                  <Button type="submit" color="success" onClick={this.toggleModal} >
                     Thêm
                   </Button>
                 </Col>

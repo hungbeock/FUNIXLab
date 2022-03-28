@@ -5,7 +5,7 @@ import dateFormat from 'dateformat'
 
 function StaffDetail(props) {
    if ( props.nv != null ) { 
-       console.log( 'sao', props.nv)
+       console.log( 'staffdetail', props.nv)
        return(
           
            <div className=" container"  >
@@ -36,31 +36,34 @@ function StaffDetail(props) {
 }
 //function dùng để hiển thị chi tiết thông tin về nhân viên
 function RenderStaff(staff) {
-    console.log(staff)
-    if(staff!=null) { 
-        return(
-            <div className="col-12">
-                <div className="row">   
-                    <div className="col-3">
-                        <CardImg width="100%" src={ staff.staff.image} alt={staff.name} />
-                    </div>
-                    <div className="col-9">
-                        <CardTitle >Họ và tên: {staff.staff.name}</CardTitle>
-                        <CardText >Ngày sinh: {dateFormat( staff.staff.doB ,"dd/MM/yyyy")}</CardText>
-                        <CardText >Ngày vào công ty: {dateFormat( staff.staff.startDate,"dd/MM/yyyy")}</CardText> 
-                        <CardText >Phòng ban: {staff.staff.department}</CardText>
-                        <CardText >Số ngày nghỉ còn lại: {staff.staff.annualLeave}</CardText>
-                        <CardText >Số ngày đã làm thêm: {staff.staff.overTime}</CardText>
-                       
-                    </div>
-                </div>
+    console.log('renderstaff', staff)
+    if (staff != null) {
+        return (
+          <div className="col-12">
+            <div className="row">
+              <div className="col-3">
+                <CardImg width="100%" src={ staff.staff.image} alt={staff.staff.name} />
+              </div>
+              <div className="col-9">
+                <CardTitle>Họ và tên: {staff.staff.name}</CardTitle>
+                <CardText>
+                  Ngày sinh: {dateFormat(staff.staff.doB, "dd/mm/yyyy")}
+                </CardText>
+                <CardText>
+                  Ngày vào công ty: {dateFormat(staff.staff.startDate, "dd/mm/yyyy")}
+                </CardText>
+                <CardText>
+                  Phòng ban: {staff.staff.department.name || staff.staff.department}
+                </CardText>
+                <CardText>Số ngày nghỉ còn lại: {staff.staff.annualLeave}</CardText>
+                <CardText>Số ngày đã làm thêm: {staff.staff.overTime}</CardText>
+              </div>
             </div>
-        )
-        }else{
-            return(
-                <div></div>
-            )
-        }
+          </div>
+        );
+      } else {
+        return <div></div>;
+      }
     
 }
 
