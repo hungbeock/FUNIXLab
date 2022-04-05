@@ -1,130 +1,95 @@
-import React, { Component } from 'react'; 
-import { Button, Card, CardImg, CardTitle, Input 
-  ,Modal ,ModalHeader,ModalBody , Form, FormGroup, Row,Label, Col, FormFeedback} from "reactstrap";
+import React, { Component } from "react";
+import {
+  Card,
+  CardImg,
+  CardBody,
+  CardSubtitle,
+  Button,
+  Modal,
+  Col,
+  Input,
+  ModalHeader,
+  ModalBody,
+  Row,
+  Label,
+  FormFeedback
+} from "reactstrap";
 import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
-
-//Function hiển thị ra danh sách nhân viên
-function RenderStaffList({ nv, onClick }) {
-    // console.log("sao the no")
-    return (
-      <Card>
-        <Link to={`/nhanvien/${nv.id}`}>
-          <CardImg width="100%" src={nv.image} alt={nv.name} />
-          <div>
-            <CardTitle>{nv.name}</CardTitle>
-          </div>
-        </Link>
-      </Card>
-    );
-}
+import { FadeTransform } from "react-animation-components";
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 const isNumber = (val) => !isNaN(Number(val));
 
-class StaffList extends Component{
+// Presentational component (const) dùng để Render danh sách từng nhân viên
+const RenderStaffItem = ({ staff, onDeleteStaff }) => {
+  return (
+    <FadeTransform
+      in
+      transformProps={{
+        exitTransform: "scale(0.5) translateY(-50%)"
+      }}
+    >
+      <div>
+        <Link to={`/staff/${staff.id}`}>
+          <Card>
+            <CardImg width="100%" src={staff.image} alt={staff.name} />
+            <CardBody>
+              <CardSubtitle>{staff.name}</CardSubtitle>
+            </CardBody>
+          </Card>
+        </Link>
+        <Button color="danger" onClick={() => onDeleteStaff(staff.id)}>
+          Delete
+        </Button>
+      </div>
+    </FadeTransform>
+  );
+};
+
+// Presentational component (const)
+class StaffList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nameF: "",
-      modalOpen: false,
-      doB: "",
-      startDate: "",
-      touched: {
-        doB: false,
-        startDate: false
-      }
+      nameF: ""
     };
-
-    this.toggleModal = this.toggleModal.bind(this);
+    /* Ràng buộc 2 chiều đối với các hàm được khai báo bên dưới */
     this.timNhanvien = this.timNhanvien.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  handleBlur = (field) => (event) => {
-    this.setState({
-      touched: { ...this.state.touched, [field]: true }
-    });
-  };
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-    this.setState({
-      [name]: value
-    });
-  }
-
-  handleSubmit = (value) => {
-    const newStaff = {
-      name: value.name,
-      doB: this.state.doB,
-      startDate: this.state.startDate,
-      department: value.department,
-      salaryScale: value.salaryScale,
-      annualLeave: value.annualLeave,
-      overTime: value.overTime,
-      image: "/assets/images/alberto.png"
-    };
-    if (!this.state.doB || !this.state.startDate)
-      this.setState({
-        touched: { doB: true, startDate: true }
-      });
-    else this.props.addStaff(newStaff);
-  };
-
-validate(doB, startDate) {
-  const errors = {
-    doB: "",
-    startDate: ""
-  };
-
-  if (this.state.touched.doB && doB.length < 1) errors.doB = "Yêu cầu nhập";
-  if (this.state.touched.startDate && startDate.length < 1)
-    errors.startDate = "Yêu cầu nhập";
-
-  return errors;
-}
-
-toggleModal(){
-  this.setState({
-    modalOpen :!this.state.modalOpen
-  })
-}
- /* Hàm tìm kiếm từ khóa tên nhân viên và render ra kết quả tìm kiếm nhân viên  */
-timNhanvien(event){
+  /* Hàm tìm kiếm từ khóa tên nhân viên và render ra kết quả tìm kiếm nhân viên  */
+  timNhanvien(event) {
+    const nameS = event.target.nameS.value;
     event.preventDefault();
-    const nameS=event.target.nameS.value;
-    this.setState({nameF:nameS} );
-    }
+    this.setState({ nameF: nameS });
+  }
 
-render() {
-  const errors = this.validate(
-      this.state.doB,
-      this.state.startDate
-      );
-  
-   const staffList= this.props.staffs.filter((nv)=>{
-    if(this.state.nameF ===""){
-      return nv;
-     }else if ( 
-      nv.name.toLowerCase().includes(this.state.nameF.toLowerCase())
-     ){
-     return nv;
-      }
-     }).map((nv)=>{  
-       return (          
-           <div className="col-lg-2 col-md-4 col-6" key={nv.id}>
-               <RenderStaffList nv={nv}  />
-           </div>         
-       )
-     })
-     return (
+  render() {
+    const staffList = this.props.staffs
+      .filter((val) => {
+        if (this.state.nameF === "") return val;
+        else if (
+          val.name.toLowerCase().includes(this.state.nameF.toLowerCase())
+        )
+          return val;
+        return 0;
+      })
+      .map((val) => {
+        return (
+          <div className="col-6 col-md-4 col-lg-2 mt-3 mb-3" key={val.id}>
+            <RenderStaffItem
+              staff={val}
+              onDeleteStaff={this.props.onDeleteStaff}
+            />
+          </div>
+        );
+      });
+
+    //Render giao diện Staff list
+    return (
       <div className="container">
         <div className="row">
           <div className="col-12 col-md-6 mt-3">
@@ -132,11 +97,7 @@ render() {
               <div className="col-10 col-md-10">
                 <h3>Nhân viên</h3>
               </div>
-              <div className="col-2 col-auto">
-                <Button outline onClick={this.toggleModal}>
-                  <span className="fa fa-plus fa-lg"></span>
-                </Button>
-              </div>
+              <AddStaffForm onAdd={this.props.onAddStaff} />
             </div>
           </div>
           <div className="col-12 col-md-6 mt-3">
@@ -161,19 +122,116 @@ render() {
           <hr />
         </div>
 
+        <div className="row shadow mb-5 mt-5">{staffList}</div>
+      </div>
+    );
+  }
+}
+
+class AddStaffForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalOpen: false,
+      doB: "",
+      startDate: "",
+      departmentId: "Dept02",
+      image: "/assets/images/alberto.png",
+      touched: {
+        doB: false,
+        startDate: false
+      }
+    };
+    /* Ràng buộc 2 chiều đối với các hàm được khai báo bên dưới */
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  /* Hàm xử lý trả touched về true sau khi người dùng không nhập gì mà thoát khỏi input text */
+  handleBlur = (field) => (evt) => {
+    this.setState({
+      touched: { ...this.state.touched, [field]: true }
+    });
+  };
+
+  /* Hàm xử lý việc nhập liệu vào ô input, thay đổi trạng thái dữ liệu */
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+  /* Hàm xử lý khi submit dữ liệu vào biểu mẫu */
+  handleSubmit = (value) => {
+    if (!this.state.doB || !this.state.startDate)
+      this.setState({
+        touched: { doB: true, startDate: true }
+      });
+    else {
+      const newStaff = {
+        name: value.name,
+        doB: this.state.doB,
+        salaryScale: parseInt(value.salaryScale, 10),
+        startDate: this.state.startDate,
+        image: "assets/images/alberto.png",
+        departmentId: this.state.departmentId,
+        annualLeave: parseInt(value.annualLeave, 10),
+        overTime: parseInt(value.overTime, 10)
+      };
+
+      this.props.onAdd(newStaff);
+    }
+  };
+
+  /* Hàm kiểm tra ngày tháng có được nhập hay không */
+  validate(doB, startDate) {
+    const errors = {
+      doB: "",
+      startDate: ""
+    };
+
+    if (this.state.touched.doB && doB.length < 1) errors.doB = "Yêu cầu nhập";
+    if (this.state.touched.startDate && startDate.length < 1)
+      errors.startDate = "Yêu cầu nhập";
+
+    return errors;
+  }
+
+  /* Hàm Bật tắt Modal */
+  toggleModal(e) {
+    e.preventDefault();
+    this.setState({
+      modalOpen: !this.state.modalOpen
+    });
+  }
+
+  render() {
+    const errors = this.validate(this.state.doB, this.state.startDate); // Tạo biến báo lỗi khi người dùng khai báo thiếu
+    return (
+      <>
+        <div className="col-2 col-auto">
+          <Button outline onClick={this.toggleModal}>
+            <span className="fa fa-plus fa-lg"></span>
+          </Button>
+        </div>
         <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Thêm nhân viên</ModalHeader>
           <ModalBody>
-            <LocalForm onSubmit={this.handleSubmit}>
+            <LocalForm onSubmit={(value) => this.handleSubmit(value)}>
               <Row className="control-group">
-                <Label htmlFor="name" md={4}>
+                <Label htmlFor=".name" md={4}>
                   Tên
                 </Label>
                 <Col md={8}>
                   <Control.text
                     model=".name"
                     className="form-control"
-                    id="name"
+                    id=".name"
                     name="name"
                     validators={{
                       required,
@@ -193,7 +251,6 @@ render() {
                   />
                 </Col>
               </Row>
-
               <Row className="control-group">
                 <Label htmlFor="doB" md={4}>
                   Ngày sinh
@@ -211,7 +268,6 @@ render() {
                   <FormFeedback>{errors.doB}</FormFeedback>
                 </Col>
               </Row>
-
               <Row className="control-group">
                 <Label htmlFor="startDate" md={4}>
                   Ngày vào công ty
@@ -234,19 +290,21 @@ render() {
                   Phòng ban
                 </Label>
                 <Col md={8}>
-                  <Control.select
-                    model=".department"
-                    name="department"
+                  <select
+                    name="departmentId"
                     id="department"
-                    defaultValue="Sale"
                     className="form-control"
+                    value={this.state.departmentId}
+                    onChange={(e) =>
+                      this.setState({ departmentId: e.target.value })
+                    }
                   >
-                    <option>Sale</option>
-                    <option>HR</option>
-                    <option>Marketing</option>
-                    <option>IT</option>
-                    <option>Finance</option>
-                  </Control.select>
+                    <option value="Dept01">Sale</option>
+                    <option value="Dept02">HR</option>
+                    <option value="Dept03">Marketing</option>
+                    <option value="Dept04">IT</option>
+                    <option value="Dept05">Finance</option>
+                  </select>
                 </Col>
               </Row>
               <Row className="control-group">
@@ -333,7 +391,7 @@ render() {
               </Row>
               <Row className="control-group">
                 <Col md={{ size: 10, offset: 2 }}>
-                  <Button type="submit" color="success" onClick={this.toggleModal} >
+                  <Button type="submit" color="success">
                     Thêm
                   </Button>
                 </Col>
@@ -341,9 +399,7 @@ render() {
             </LocalForm>
           </ModalBody>
         </Modal>
-
-        <div className="row shadow mb-5 mt-5">{staffList}</div>
-      </div>
+      </>
     );
   }
 }
