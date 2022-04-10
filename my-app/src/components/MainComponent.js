@@ -6,6 +6,7 @@ import DishDetail from './DishdetailComponent'
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import About from "./AboutComponent";
+import Test from './Test'
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { postComment ,fetchDishes,fetchComments, fetchPromos } from '../redux/ActionCreators';
@@ -81,6 +82,8 @@ class Main extends Component {
               />
                   <Route exact path='/menu' component={() => <Menu dishes={this.props.dishes} />} />
                   <Route path='/menu/:dishId' component={DishWithId} />
+                  <Route path='/menu/test' component={<Test/>} />
+
                   <Route exact path='/contactus' component={()=> <Contact 
                   resetFeedbackForm={this.props.resetFeedbackForm} />}  />
                   <Redirect to="/home" />
